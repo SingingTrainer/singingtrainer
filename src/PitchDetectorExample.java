@@ -194,7 +194,7 @@ public class PitchDetectorExample extends JFrame implements PitchDetectionHandle
 		
 		textArea = new JTextArea();
 		textArea.setEditable(false);
-		add(new JScrollPane(textArea));
+		//add(new JScrollPane(textArea));
 	}
 
 
