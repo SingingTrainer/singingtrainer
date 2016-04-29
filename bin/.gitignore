@@ -1,11 +1,4 @@
-/DTW.class
-/MyParserListener.class
-/ParserDemo.class
-/PitchDetectorExample$1.class
-/PitchDetectorExample$2.class
-/PitchDetectorExample$3.class
-/PitchDetectorExample$But1.class
-/PitchDetectorExample$But2.class
-/PitchDetectorExample$But3.class
-/PitchDetectorExample$ImagePanel.class
-/PitchDetectorExample.class
+/gui/
+/utilities/
+/melodic/
+/rhythmic/
