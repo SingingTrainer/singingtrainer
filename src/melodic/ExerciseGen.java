@@ -15,7 +15,7 @@ import org.jfugue.theory.Note;
 
 
 public class ExerciseGen {
-	
+
 	ArrayList<Integer> arrLst = new ArrayList<Integer>();
 	int[] pos;
 	public ArrayList<Double> notes = new ArrayList<Double>();
@@ -24,9 +24,9 @@ public class ExerciseGen {
 	byte[] notesBy;
 	float[] ex;
 	int[] exPos;
-	
+
 	int exNum;
-	
+
 	public int[] getExPos() {
 		return exPos;
 	}
@@ -37,40 +37,31 @@ public class ExerciseGen {
 
 	public ExerciseGen(int exNum) throws InvalidMidiDataException, IOException{
 		MidiParser parser = new MidiParser(); // Remember, you can use any Parser!
-        MyParserListener listener = new MyParserListener();
-        parser.addParserListener(listener);
-        parser.parse(MidiSystem.getSequence(new File("C_major2.mid")));
-        notes=listener.getArrLst();
-        notesByLst=listener.getByteLst();
-        this.exNum=exNum;
-        createEx();
-        createRefArr(ex);
+		MyParserListener listener = new MyParserListener();
+		parser.addParserListener(listener);
+		parser.parse(MidiSystem.getSequence(new File("C_major2.mid")));
+		notes=listener.getArrLst();
+		notesByLst=listener.getByteLst();
+		this.exNum=exNum;
+		createEx();
 	}
-	
+
 	public void createRefArr(float[] arrLst){
-		refArr = new float[44100/2048*3];
+		refArr = new float[44100*5/2048];
 		int rep = refArr.length/arrLst.length;
 		for(int i=0;i<refArr.length;i++){
 			refArr[i]=arrLst[i/rep];
 		}
 	}
-	
-	/*public void createRefArr(ArrayList<Double> arrLst){
-		refArr = new float[44100/2048*3];
-		int rep = refArr.length/arrLst.size();
-		for(int i=0;i<refArr.length;i++){
-			refArr[i]=arrLst.get(i/rep).floatValue();
-		}
-	}*/
-	
+
 	public void createExArr(){
 		refArr = new float[44100/2048*3];
-		
+
 		for(int i=0;i<refArr.length;i++){
 			refArr[i]=ex[i/(refArr.length/ex.length)];
 		}
 	}
-	
+
 	public void createEx(){
 		if(exNum<5){
 			exPos=create1Ex();
@@ -95,8 +86,10 @@ public class ExerciseGen {
 				ex[i]=notes.get(exPos[i]).floatValue();
 			}
 		}
+
+		createRefArr(ex);
 	}
-	
+
 	public void playEx(){
 		Pattern pattern = new Pattern();
 		pattern.setTempo(100);
@@ -104,28 +97,28 @@ public class ExerciseGen {
 			Note note = new Note(notesByLst.get(exPos[i]),1);
 			pattern.add(note);
 		}
-		
+
 		Player player = new Player();
 		player.play(pattern);
 	}
-	
+
 	public int[] create1Ex(){
 		int i=(int) (Math.random()*notes.size());
 		int [] ex = new int[1];
-		
+
 		ex[0]=i;
 		return ex;
-		
+
 	}
-	
+
 	public int[] create2Ex(){
 		int[] ex = new int[2];
 		ex[0]=0;
 		ex[1]=((int) (Math.random()*notes.size()));
-		
+
 		return ex;
 	}
-	
+
 	public int[] create3Ex(){
 		int[] ex = new int[3];
 		int root = ((int) (Math.random()*notes.size()));
@@ -133,10 +126,10 @@ public class ExerciseGen {
 		for(int i=1;i<3;i++){
 			ex[i]=(root+(i*2))%7;
 		}
-		
+
 		return ex;
 	}
-	
+
 	public int[] create4Ex(){
 		int[] ex = new int[4];
 		int root = ((int) (Math.random()*notes.size()));
@@ -144,46 +137,54 @@ public class ExerciseGen {
 		for(int i=1;i<4;i++){
 			ex[i]=(root+(i*2))%7;
 		}
-		
+
 		return ex;
 	}
-	
-	
-    public static void main(String[] args) throws InvalidMidiDataException, IOException {
-    	ExerciseGen prs = new ExerciseGen(7);
-       
-    }
+
+
+	public static void main(String[] args) throws InvalidMidiDataException, IOException {
+		ExerciseGen prs = new ExerciseGen(7);
+
+	}
 
 	public float[] getRefArr() {
 		return refArr;
 	}
-    
-    
+
+	public void setExNum(int exNum) {
+		this.exNum = exNum;
+		createEx();
+	}
+
+	public int getExNum() {
+		return exNum;
+	}
+	
 }
 
 class MyParserListener extends ParserListenerAdapter {
-	
+
 	ArrayList<Integer> arrLst = new ArrayList<Integer>();
 	int[] pos;
 	public ArrayList<Double> notes = new ArrayList<Double>();
 	float[] refArr;
 	public ArrayList<Byte> notesByLst = new ArrayList<Byte>();
-	
-    @Override
-    public void onNoteParsed(Note note) {
-        // A "C" note is in the 0th position of an octave
-    	if(Note.getFrequencyForNote(note.getValue())>10){
-    		notes.add(Note.getFrequencyForNote(note.getValue()));
-    		notesByLst.add(note.getValue());
-    		//System.out.println(Note.getFrequencyForNote(note.getValue()));
-    	}
-    }
-    
-    public ArrayList<Byte> getByteLst(){
-    	return notesByLst;
-    }
-    
-    public ArrayList<Double> getArrLst(){
-    	return notes;
-    }
+
+	@Override
+	public void onNoteParsed(Note note) {
+		// A "C" note is in the 0th position of an octave
+		if(Note.getFrequencyForNote(note.getValue())>10){
+			notes.add(Note.getFrequencyForNote(note.getValue()));
+			notesByLst.add(note.getValue());
+			//System.out.println(Note.getFrequencyForNote(note.getValue()));
+		}
+	}
+
+	public ArrayList<Byte> getByteLst(){
+		return notesByLst;
+	}
+
+	public ArrayList<Double> getArrLst(){
+		return notes;
+	}
 }

@@ -6,10 +6,12 @@ import javax.swing.*;
  
 public class Plot extends JPanel {
     double[][] data;
+    double[][] plotData;
     final int PAD = 20;
     
-    public Plot(double[][] data, String name){
-    	this.data=data;
+    public Plot(float[] ref, float[] rec, String name){
+    	resample(ref,rec);
+    	this.data=plotData;
     	JFrame f = new JFrame(name);
         f.add(this);
         f.setSize(1000,400);
@@ -88,5 +90,64 @@ public class Plot extends JPanel {
         }
         return max;
     }
+    
+    public void resample(float[] ref, float[] rec){
+		double [] newExp;
+		if(ref.length>rec.length){
+			newExp = new double[ref.length];
+			double div = ref.length/rec.length;
+			int round = (int) Math.floor(div);
+			int count=0;
+			int level=0;
+			int dif = ref.length-round*rec.length;
+
+			for(int i=0;i<rec.length;i++){
+				if(level<dif){
+					round=(int) Math.floor(div)+1;
+				}
+				else{
+					round=(int) Math.floor(div);
+				}
+
+				for(int j=0; j<round;j++){
+					newExp[count]=rec[i];
+					//System.out.println("NewExp");
+					count++;
+
+				}
+				level++;
+
+			}			
+		}
+		else{
+			double div = rec.length/ref.length;
+			int round = (int) Math.round(div);
+			int count=0;
+			int level=0;
+			newExp = new double[ref.length];
+
+			for(int i=0; i<rec.length;i++){
+
+				if((i-level*(round-1))<newExp.length){
+					if((count%round)==0){
+						newExp[i-level*(round-1)]=rec[i];
+						level++;
+					}
+				}
+
+				count++;
+			}
+		}
+
+		plotData = new double[ref.length][ref.length];
+		for(int i=0;i<ref.length;i++){
+			for(int j=0; j<2;j++){
+				if(j%2==0)
+					plotData[i][j]=ref[i];
+				if(j%2!=0)
+					plotData[i][j]=newExp[i];
+			}
+		}
+	}
  
 }

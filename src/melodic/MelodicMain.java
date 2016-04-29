@@ -29,12 +29,13 @@ public class MelodicMain {
 	private ExerciseGen exGen;
 	private DTW dtw;
 	private double dist;
+	public boolean nextFlag;
 
 	public MelodicMain() throws InvalidMidiDataException, IOException{
 		this.level=1;
 		this.exNo=1;
 		this.exGen = new ExerciseGen(exNo);
-
+		this.nextFlag=false;
 	}
 
 	public void captureAudio(){
@@ -120,11 +121,7 @@ public class MelodicMain {
 			JOptionPane.showMessageDialog(null, "You have failed this exercise, try again!");
 		}else{
 			JOptionPane.showMessageDialog(null, "Congrats! Do the next one!");
-			exNo=exNo+1;
-			if(exNo>16){
-				exNo=1;
-				level=level+1;
-			}
+			nextFlag=true;
 		}
 	}
 	
@@ -179,7 +176,13 @@ public class MelodicMain {
 	public TargetDataLine getTargetDataLine() {
 		return targetDataLine;
 	}
-	
-	
+
+	public boolean isNextFlag() {
+		return nextFlag;
+	}
+
+	public int getExNo() {
+		return exNo;
+	}
 
 }

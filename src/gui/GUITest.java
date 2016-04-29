@@ -25,13 +25,13 @@ import javax.swing.border.TitledBorder;
 import melodic.MelodicMain;
 
 public class GUITest extends JFrame{
-	
+
 	MelodicMain mel;
 	private JButton but1 = new JButton("Play");
 	private JButton but2 = new JButton("Start Rec");
 	private JButton but3 = new JButton("Finish Rec");
 	private JButton but4 = new JButton("Analyze");
-	
+
 	public GUITest() throws InvalidMidiDataException, IOException{
 		this.mel = new MelodicMain();
 		this.setLayout(new GridLayout(0, 1));
@@ -40,10 +40,19 @@ public class GUITest extends JFrame{
 		this.but1.setEnabled(true);
 		this.but2.setEnabled(true);
 		this.but3.setEnabled(false);
-		this.but4.setEnabled(true);		
+		this.but4.setEnabled(true);
+		JButton prev = new JButton("<Previous");
+		prev.setEnabled(true);
+		JButton next = new JButton("Next>");
+		next.setEnabled(mel.nextFlag);
 
 		JPanel notes = new ImagePanel();
 		notes.setBorder(new TitledBorder("Score"));
+
+		JLabel level = new JLabel("Level 3");
+		level.setBorder(new TitledBorder(""));
+		JLabel exer = new JLabel("Ex. "+ mel.getExNo());
+		exer.setBorder(new TitledBorder(""));
 		
 		JPanel buttons = new JPanel();
 		buttons.setBorder(new TitledBorder("Control Panel"));
@@ -90,10 +99,34 @@ public class GUITest extends JFrame{
 					public void actionPerformed(
 							ActionEvent e){
 						mel.analyze();
+						next.setEnabled(mel.isNextFlag());
+						Plot plot = new Plot(mel.getRef(), mel.getRec(), "Plot");
 					}//end actionPerformed
 				}//end ActionListener
 				);
-		
+		prev.addActionListener(
+				new ActionListener(){
+					public void actionPerformed(
+							ActionEvent e){
+						int exNum = mel.getExGen().getExNum();
+						mel.getExGen().setExNum(exNum-1);
+						mel.getExGen().createEx();
+						exer.setText("Ex. "+(exNum-1));
+					}//end actionPerformed
+				}//end ActionListener
+				);
+		next.addActionListener(
+				new ActionListener(){
+					public void actionPerformed(
+							ActionEvent e){
+						int exNum = mel.getExGen().getExNum();
+						mel.getExGen().setExNum(exNum+1);
+						mel.getExGen().createEx();
+						exer.setText("Ex. "+(exNum+1));
+					}//end actionPerformed
+				}//end ActionListener
+				);
+
 
 		buttons.add(but1);
 		buttons.add(but2);
@@ -103,19 +136,11 @@ public class GUITest extends JFrame{
 
 		JPanel info = new JPanel(new GridBagLayout());
 		info.setBorder(new TitledBorder("Exercise Info"));
-		JLabel level = new JLabel("Level 3");
-		level.setBorder(new TitledBorder(""));
-		JLabel exer = new JLabel("Ex. 9");
-		exer.setBorder(new TitledBorder(""));
 		JLabel label = new JLabel("C-Major");
 		label.setBorder(new TitledBorder(""));
 		label.setFont(new Font("SansSerif", Font.BOLD, 20));
 		JLabel empt = new JLabel(" ");
 		JLabel empt1 = new JLabel(" ");
-		JButton prev = new JButton("<Previous");
-		prev.setEnabled(true);
-		JButton next = new JButton("Next>");
-		next.setEnabled(true);
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -143,7 +168,7 @@ public class GUITest extends JFrame{
 		this.add(notes);
 
 	}
-	
+
 	class ImagePanel extends JPanel{
 
 		private BufferedImage image;
@@ -165,10 +190,10 @@ public class GUITest extends JFrame{
 		}
 
 	}
-	
+
 	public static void main(String args[]) throws InvalidMidiDataException, IOException{
 		GUITest test = new GUITest();
-		
+
 		test.pack();
 		test.setSize(900, 500);
 		test.setVisible(true);
