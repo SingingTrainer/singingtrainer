@@ -38,8 +38,8 @@ public class GUITest extends JFrame{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Singing Trainer");
 		this.but1.setEnabled(true);
-		this.but2.setEnabled(false);
-		this.but3.setEnabled(true);
+		this.but2.setEnabled(true);
+		this.but3.setEnabled(false);
 		this.but4.setEnabled(true);		
 
 		JPanel notes = new ImagePanel();
@@ -168,5 +168,9 @@ public class GUITest extends JFrame{
 	
 	public static void main(String args[]) throws InvalidMidiDataException, IOException{
 		GUITest test = new GUITest();
+		
+		test.pack();
+		test.setSize(900, 500);
+		test.setVisible(true);
 	}
 }

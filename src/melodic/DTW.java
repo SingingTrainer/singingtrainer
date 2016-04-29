@@ -32,7 +32,7 @@ public class DTW {
 	 * @param query		
 	 * @param templete	
 	 */
-	public DTW(float[] sample, float[] templete) {
+	public DTW(float[] sample, float[] templete) {		
 		seq1 = sample;
 		seq2 = templete;
 		

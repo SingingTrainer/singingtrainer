@@ -105,9 +105,11 @@ public class MelodicMain {
 	}
 	
 	public void analyze(){
+		readWaveFile();
 		this.ref = exGen.getRefArr();
 		estimate(this.org);
 		rec = orgPitchResult;
+		System.out.println(ref.length+"ref");
 		dtw = new DTW(ref,rec);
 		dist = dtw.getDistance();
 		checkResult();

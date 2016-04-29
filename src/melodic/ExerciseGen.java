@@ -44,15 +44,24 @@ public class ExerciseGen {
         notesByLst=listener.getByteLst();
         this.exNum=exNum;
         createEx();
+        createRefArr(ex);
 	}
 	
-	public void createRefArr(ArrayList<Double> arrLst){
+	public void createRefArr(float[] arrLst){
+		refArr = new float[44100/2048*3];
+		int rep = refArr.length/arrLst.length;
+		for(int i=0;i<refArr.length;i++){
+			refArr[i]=arrLst[i/rep];
+		}
+	}
+	
+	/*public void createRefArr(ArrayList<Double> arrLst){
 		refArr = new float[44100/2048*3];
 		int rep = refArr.length/arrLst.size();
 		for(int i=0;i<refArr.length;i++){
 			refArr[i]=arrLst.get(i/rep).floatValue();
 		}
-	}
+	}*/
 	
 	public void createExArr(){
 		refArr = new float[44100/2048*3];
@@ -86,7 +95,6 @@ public class ExerciseGen {
 				ex[i]=notes.get(exPos[i]).floatValue();
 			}
 		}
-		playEx();
 	}
 	
 	public void playEx(){
