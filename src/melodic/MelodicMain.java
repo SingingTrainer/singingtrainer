@@ -117,7 +117,8 @@ public class MelodicMain {
 	}
 	
 	public void checkResult(){
-		if(dist<12000){
+		System.out.println(dist);
+		if(dist>18000){
 			JOptionPane.showMessageDialog(null, "You have failed this exercise, try again!");
 		}else{
 			JOptionPane.showMessageDialog(null, "Congrats! Do the next one!");
