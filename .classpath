@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="C:/Users/Furkan/Downloads/TarsosDSP-latest.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Furkan/Downloads/jfugue-5.0.5.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Furkan/Downloads/SoundDetector-2.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Furkan/Downloads/json-simple.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

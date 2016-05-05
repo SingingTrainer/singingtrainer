@@ -1,9 +1,11 @@
 package rhythmic;
 
+import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import gui.Plot2;
 import utilities.AudioUtilities;
 import utilities.ThresholdFunction;
 import utilities.WaveReader;
@@ -61,9 +63,9 @@ public class RhythmicHelper {
 		List<Float> threshold = new ThresholdFunction( HISTORY_SIZE, multipliers[0]).calculate( spectralFlux );
 		thresholds.add( threshold );
 
-		//Plot plot = new Plot( "Spectral Flux", 1024, 512 );
-		//plot.plot(spectralFlux, 1, 0, false, Color.red);
-		//plot.plot(thresholds.get(0), 1,0,true,Color.blue);
+		/*Plot2 plot = new Plot2( "Spectral Flux", 1024, 512 );
+		plot.plot(spectralFlux, 1, 0, false, Color.red);
+		plot.plot(thresholds.get(0), 1,0,true,Color.blue);*/
 		ArrayList<Integer> peak = new ArrayList<Integer>();
 		this.peakPro = new ArrayList<Integer>();
 		for(int i=0;i<spectralFlux.size();i++){
@@ -115,14 +117,12 @@ public class RhythmicHelper {
 		a3 = new double[numOfPeaks-1];
 		for(int i=0; i<numOfPeaks-1;i++){
 			a3[i]=locOfPeaks.get(i+1)-locOfPeaks.get(i);
-			//System.out.println(a3[i]);
 		}
 		totalMeas=0;
 		a4 = new double[a3.length];
 		for(int i=0;i<a3.length;i++){
 			double first = a3[0];
 			a4[i]=a3[i]/first;
-			System.out.println(a4[i]);
 			totalMeas=totalMeas+a4[i];
 		}
 	}

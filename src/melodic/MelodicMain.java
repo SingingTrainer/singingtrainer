@@ -31,9 +31,9 @@ public class MelodicMain {
 	private double dist;
 	public boolean nextFlag;
 
-	public MelodicMain() throws InvalidMidiDataException, IOException{
-		this.level=1;
-		this.exNo=5;
+	public MelodicMain(int level, int exNo) throws InvalidMidiDataException, IOException{
+		this.level=level;
+		this.exNo=exNo;
 		this.exGen = new ExerciseGen(exNo);
 		this.nextFlag=false;
 	}
@@ -185,5 +185,18 @@ public class MelodicMain {
 	public int getExNo() {
 		return exNo;
 	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public void setExNo(int exNo) {
+		this.exNo = exNo;
+	}
+	
 
 }

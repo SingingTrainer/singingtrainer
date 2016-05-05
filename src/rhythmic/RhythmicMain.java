@@ -40,10 +40,20 @@ public class RhythmicMain {
 	String exName;
 	ArrayList<Integer> al1 = new ArrayList<Integer>();
 	ArrayList<Integer> al2 = new ArrayList<Integer>();
+	boolean nextFlag;
+	int exNo;
+	int level;
 
-	public RhythmicMain(){
-		exName = "rhy1";
-
+	public RhythmicMain(int exNo){
+		this.level=1;
+		this.exNo=exNo;
+		if(exNo==1)
+			exName = "rhy1";
+		if(exNo==2)
+			exName = "rhy2";
+		if(exNo==3)
+			exName = "rhy3";
+		this.nextFlag=false;
 	}
 
 	public void captureAudio(){
@@ -161,11 +171,47 @@ public class RhythmicMain {
 		}
 		
 		for(int i=0;i<ref1.length;i++){
-			this.al1.add(ref1[i]);
+			this.al1.add((int)ref1[i]);
 		}
 		
 		for(int i=0;i<ref2.length;i++){
 			this.al2.add((int) ref2[i]);
+		}
+		
+		calculateDist();
+		if(dist<5){
+			nextFlag=true;
+		}
+	}
+	
+	public void calculateDist(){
+		dist=0;
+		int found=0;
+		for(int i=0;i<al1.size();i++){
+			for(int j=0;j<5;j++){
+				if((i-j)>=0){
+					if(al1.get(i)!=al2.get(i-j)){
+						dist++;
+					}else{
+						found=1;
+					}
+				}					
+			}
+			if(found==1){
+				dist=0;
+			}else{
+				for(int j=0;j<5;j++){
+					if(al1.get(i)!=al2.get(i+j)){
+						dist++;
+					}else{
+						found=1;
+					}
+				}
+			}
+			if(found==1){
+				dist=0;
+			}
+			
 		}
 	}
 
@@ -176,6 +222,38 @@ public class RhythmicMain {
 	public ArrayList<Integer> getAl2() {
 		return al2;
 	}
+
+	public TargetDataLine getTargetDataLine() {
+		return targetDataLine;
+	}
+
+	public boolean isNextFlag() {
+		return nextFlag;
+	}
+
+	public int getExNo() {
+		return exNo;
+	}
+
+	public void setExNo(int exNo) {
+		this.exNo = exNo;
+		if(exNo==1)
+			exName = "rhy1";
+		if(exNo==2)
+			exName = "rhy2";
+		if(exNo==3)
+			exName = "rhy3";
+		
+	}
+	
+	public int getLevel() {
+		return level;
+	}
+
+	public double getDist() {
+		return dist;
+	}
+	
 	
 	
 }
