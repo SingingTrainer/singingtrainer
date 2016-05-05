@@ -33,7 +33,7 @@ public class MelodicMain {
 
 	public MelodicMain() throws InvalidMidiDataException, IOException{
 		this.level=1;
-		this.exNo=1;
+		this.exNo=5;
 		this.exGen = new ExerciseGen(exNo);
 		this.nextFlag=false;
 	}
