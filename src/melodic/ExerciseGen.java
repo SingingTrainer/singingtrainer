@@ -48,7 +48,7 @@ public class ExerciseGen {
 
 	public void createRefArr(float[] arrLst){
 		refArr = new float[44100*5/2048];
-		int rep = refArr.length/arrLst.length;
+		int rep = refArr.length/arrLst.length+1;
 		for(int i=0;i<refArr.length;i++){
 			refArr[i]=arrLst[i/rep];
 		}
