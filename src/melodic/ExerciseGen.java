@@ -50,7 +50,10 @@ public class ExerciseGen {
 		refArr = new float[44100*3/2048];
 		int rep = refArr.length/arrLst.length+1;
 		for(int i=0;i<refArr.length;i++){
-			refArr[i]=arrLst[i/rep];
+			float fl = arrLst[i/rep];
+			if(fl>520)
+				fl=(float) 261.6256;
+			refArr[i]=fl;
 		}
 	}
 

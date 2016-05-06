@@ -80,7 +80,7 @@ public class RhythmicHelper {
 		ArrayList<Integer> peak = new ArrayList<Integer>();
 		this.peakPro = new ArrayList<Integer>();
 		for(int i=0;i<spectralFlux.size();i++){
-			if(spectralFlux.get(i)>thresholds.get(0).get(i)+5){
+			if(spectralFlux.get(i)>thresholds.get(0).get(i)+2){
 				peak.add(1);
 			}else{
 				peak.add(0);
@@ -113,6 +113,11 @@ public class RhythmicHelper {
 					numOfPeaks++;
 					locOfPeaks.add(i);
 				}
+			}else{
+				if(a1[i]==1){
+					numOfPeaks++;
+					locOfPeaks.add(i);
+				}
 			}
 				
 			if(a1[i]==1)
@@ -120,7 +125,7 @@ public class RhythmicHelper {
 		}
 		
 		a2 = new int[flag+1];
-		
+		a2[0]=1;
 		for(int i=0; i<a2.length;i++){
 			a2[i]=a1[i];
 		}

@@ -282,9 +282,10 @@ public class testt_GUII extends JFrame {
 						Thread t = new Thread(new Runnable() {
 						    @Override
 						    public void run() {
-						    	Plot2 plot2 = new Plot2("Results", 1024, 512);
-								plot2.plot(mel.getRef(), (float) 0.07, 0, false, Color.RED);
-								plot2.plot(mel.getRec(), (float) 0.07, 0, true, Color.BLUE); 								
+						    	/*Plot2 plot2 = new Plot2("Results", 1024, 512);
+								plot2.plot(mel.getRef(), (float) 0.5, 0, false, Color.RED);
+								plot2.plot(mel.getRec(), (float) 0.5, 0, true, Color.BLUE); */	
+								Plot plot3 = new Plot(mel.getRef(),mel.getRec(),"Results");
 						    }
 						    
 						   });
@@ -433,7 +434,6 @@ public class testt_GUII extends JFrame {
 							ActionEvent e){
 						int exNum = rit.getExNo();
 						rit.setExNo(exNum+1);
-						mel.getExGen().setExNum(exNum+1);
 						exer.setText(""+(exNum+1));
 					}//end actionPerformed
 				}//end ActionListener
@@ -610,9 +610,6 @@ public class testt_GUII extends JFrame {
 					
 					this.mel = new MelodicMain(Integer.parseInt(melArray.get(0).toString()),Integer.parseInt(melArray.get(1).toString()));
 					
-					System.out.println("BASARDIM!!!!!!!!!!!");
-					System.out.println(melArray);
-					System.out.println(melArray.get(0));
 		
 				}
 			}
@@ -647,10 +644,7 @@ public class testt_GUII extends JFrame {
 					
 					this.rit = new RhythmicMain(Integer.parseInt(melArray.get(1).toString()));
 					
-					System.out.println("BASARDIM!!!!!!!!!!!");
-					System.out.println(melArray);
-					System.out.println(melArray.get(0));
-		
+				
 				}
 			}
 

@@ -141,14 +141,14 @@ public class RhythmicMain {
 		int peak1 = rh1.getA4().length;
 		int peak2 = rh2.getA4().length;
 
-		int[] ref1 = new int[400];
-		int[] ref2 = new int[400];
+		int[] ref1 = new int[500];
+		int[] ref2 = new int[500];
 
 		double[] peaks1 = rh1.getA4();
 		double[] peaks2 = rh2.getA4();
 
 		ref1[0]=1;
-		for(int i=0;i<peak1-1;i++){
+		for(int i=0;i<peak1;i++){
 			double num=0;
 			for(int j=0; j<=i;j++){
 				num=num+peaks1[j];
@@ -156,7 +156,7 @@ public class RhythmicMain {
 			ref1[(int) (num*base1)]=1;
 		}
 		ref2[0]=1;
-		for(int i=0;i<peak2-1;i++){
+		for(int i=0;i<peak2;i++){
 			double num=0;
 			for(int j=0; j<=i; j++){
 				num=num+peaks2[j];
