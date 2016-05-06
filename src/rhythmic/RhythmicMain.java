@@ -2,12 +2,11 @@ package rhythmic;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
+import sun.audio.*;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -15,11 +14,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-import utilities.AudioUtilities;
-import utilities.ThresholdFunction;
-import utilities.WaveReader;
 
 
 public class RhythmicMain {
@@ -122,37 +116,37 @@ public class RhythmicMain {
 
 		}//end run
 	}
-	
+
 	public void playEx() throws IOException{
 		String gongFile = this.exName.concat(".wav");
-	    InputStream in = new FileInputStream(gongFile);
-	 
-	    // create an audiostream from the inputstream
-	    AudioStream audioStream = new AudioStream(in);
-	 
-	    // play the audio clip with the audioplayer class
-	    AudioPlayer.player.start(audioStream);
+		InputStream in = new FileInputStream(gongFile);
+
+		// create an audiostream from the inputstream
+		AudioStream audioStream = new AudioStream(in);
+
+		// play the audio clip with the audioplayer class
+		AudioPlayer.player.start(audioStream);
 	}
 
 	public void analyze(){
 		RhythmicHelper rh1 = new RhythmicHelper(this.exName);
 		RhythmicHelper rh2 = new RhythmicHelper("recRhy");
-		
+
 		double totalM1 = rh1.getTotalMeas();
 		double totalM2 = rh2.getTotalMeas();
-		
+
 		int base1 = (int) (400/totalM1);
 		int base2 = (int) (400/totalM2);
-		
+
 		int peak1 = rh1.getA4().length;
 		int peak2 = rh2.getA4().length;
-		
+
 		int[] ref1 = new int[400];
 		int[] ref2 = new int[400];
-		
+
 		double[] peaks1 = rh1.getA4();
 		double[] peaks2 = rh2.getA4();
-		
+
 		ref1[0]=1;
 		for(int i=0;i<peak1-1;i++){
 			double num=0;
@@ -169,49 +163,50 @@ public class RhythmicMain {
 			}
 			ref2[(int) (num*base2)]=1;
 		}
-		
+
 		for(int i=0;i<ref1.length;i++){
 			this.al1.add((int)ref1[i]);
 		}
-		
+
 		for(int i=0;i<ref2.length;i++){
 			this.al2.add((int) ref2[i]);
 		}
-		
+
 		calculateDist();
 		if(dist<5){
 			nextFlag=true;
 		}
 	}
-	
+
 	public void calculateDist(){
 		dist=0;
 		int found=0;
 		for(int i=0;i<al1.size();i++){
-			for(int j=0;j<5;j++){
-				if((i-j)>=0){
-					if(al1.get(i)!=al2.get(i-j)){
-						dist++;
-					}else{
-						found=1;
-					}
-				}					
-			}
-			if(found==1){
-				dist=0;
-			}else{
+			if(al1.get(i)==1){
 				for(int j=0;j<5;j++){
-					if(al1.get(i)!=al2.get(i+j)){
-						dist++;
-					}else{
-						found=1;
+					if((i-j)>=0){
+						if(al1.get(i)!=al2.get(i-j)){
+							dist++;
+						}else{
+							found=1;
+						}
+					}					
+				}
+				if(found==1){
+					dist=0;
+				}else{
+					for(int j=0;j<5;j++){
+						if(al1.get(i)!=al2.get(i+j)){
+							dist++;
+						}else{
+							found=1;
+						}
 					}
 				}
+				if(found==1){
+					dist=0;
+				}
 			}
-			if(found==1){
-				dist=0;
-			}
-			
 		}
 	}
 
@@ -243,9 +238,9 @@ public class RhythmicMain {
 			exName = "rhy2";
 		if(exNo==3)
 			exName = "rhy3";
-		
+
 	}
-	
+
 	public int getLevel() {
 		return level;
 	}
@@ -253,7 +248,7 @@ public class RhythmicMain {
 	public double getDist() {
 		return dist;
 	}
-	
-	
-	
+
+
+
 }

@@ -62,6 +62,17 @@ public class RhythmicHelper {
 
 		List<Float> threshold = new ThresholdFunction( HISTORY_SIZE, multipliers[0]).calculate( spectralFlux );
 		thresholds.add( threshold );
+		
+		Thread t = new Thread(new Runnable() {
+		    @Override
+		    public void run() {
+		    	Plot2 plot = new Plot2( "Spectral Flux", 1024, 512 );
+				plot.plot(spectralFlux, 1, 0, false, Color.red);
+				plot.plot(thresholds.get(0), 1,0,true,Color.blue);								
+		    }
+		    
+		   });
+		t.start();
 
 		/*Plot2 plot = new Plot2( "Spectral Flux", 1024, 512 );
 		plot.plot(spectralFlux, 1, 0, false, Color.red);
