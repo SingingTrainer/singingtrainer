@@ -346,7 +346,7 @@ public class Plot3 extends JPanel
 				g.setColor( Color.black );
 				g.fillRect( 0, 0, image.getWidth(), image.getHeight() ); 
 				g.dispose();
-				panel.setSize( image.getWidth(), image.getHeight( ));
+				panel.setSize( this.getWidth(), this.getHeight( ));
 			}
 				
 			if( !useLastScale )
@@ -380,12 +380,12 @@ public class Plot3 extends JPanel
 		{
 			if( image.getWidth() <  samples.size() / samplesPerPixel )
 			{
-				image = new BufferedImage( (int)(samples.size() / samplesPerPixel), frame.getHeight(), BufferedImage.TYPE_4BYTE_ABGR );
+				image = new BufferedImage( 700, 280, BufferedImage.TYPE_4BYTE_ABGR );
 				Graphics2D g = image.createGraphics();
 				g.setColor( Color.black );
 				g.fillRect( 0, 0, image.getWidth(), image.getHeight() ); 
 				g.dispose();
-				panel.setSize( image.getWidth(), image.getHeight( ));
+				this.setSize( image.getWidth(), image.getHeight( ));
 			}
 				
 			if( !useLastScale )

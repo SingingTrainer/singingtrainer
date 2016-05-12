@@ -162,6 +162,10 @@ public class ExerciseGen {
 	public int getExNum() {
 		return exNum;
 	}
+
+	public float[] getEx() {
+		return ex;
+	}
 	
 }
 
@@ -177,8 +181,11 @@ class MyParserListener extends ParserListenerAdapter {
 	public void onNoteParsed(Note note) {
 		// A "C" note is in the 0th position of an octave
 		if(Note.getFrequencyForNote(note.getValue())>10){
-			notes.add(Note.getFrequencyForNote(note.getValue()));
-			notesByLst.add(note.getValue());
+			byte value = note.getValue();
+			if(value>520)
+				value=(byte)261.6256;
+			notes.add(Note.getFrequencyForNote(value));
+			notesByLst.add(value);
 			//System.out.println(Note.getFrequencyForNote(note.getValue()));
 		}
 	}

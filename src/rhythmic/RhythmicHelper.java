@@ -63,7 +63,7 @@ public class RhythmicHelper {
 		List<Float> threshold = new ThresholdFunction( HISTORY_SIZE, multipliers[0]).calculate( spectralFlux );
 		thresholds.add( threshold );
 		
-		Thread t = new Thread(new Runnable() {
+		/*Thread t = new Thread(new Runnable() {
 		    @Override
 		    public void run() {
 		    	Plot2 plot = new Plot2( "Spectral Flux", 1024, 512 );
@@ -72,7 +72,7 @@ public class RhythmicHelper {
 		    }
 		    
 		   });
-		t.start();
+		t.start();*/
 
 		/*Plot2 plot = new Plot2( "Spectral Flux", 1024, 512 );
 		plot.plot(spectralFlux, 1, 0, false, Color.red);
@@ -109,20 +109,23 @@ public class RhythmicHelper {
 		int flag=0;
 		for(int i=0;i<a1.length;i++){
 			if(i!=0){
-				if(a1[i]==1 && a1[i-1]!=1){
+				if(a1[i]==1 && a1[i-1]!=1 && a1[i-2]!=1){
 					numOfPeaks++;
 					locOfPeaks.add(i);
+					System.out.println(i);
 				}
 			}else{
 				if(a1[i]==1){
 					numOfPeaks++;
 					locOfPeaks.add(i);
+					System.out.println(i);
 				}
 			}
 				
 			if(a1[i]==1)
 				flag=i;
 		}
+		System.out.println("hop");
 		
 		a2 = new int[flag+1];
 		a2[0]=1;

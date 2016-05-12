@@ -85,7 +85,7 @@ public class testt_GUII extends JFrame {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 400, 300);
+		frame.setBounds(500, 300, 400, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -103,11 +103,11 @@ public class testt_GUII extends JFrame {
 		lblNewLabel.setBounds(124, 117, 181, 16);
 		frame.getContentPane().add(lblNewLabel);
 
-		JRadioButton rdbtnMelodicTrainer = new JRadioButton("Melodic Trainer");
+		JRadioButton rdbtnMelodicTrainer = new JRadioButton("Melody Trainer");
 		rdbtnMelodicTrainer.setBounds(124, 145, 141, 23);
 		frame.getContentPane().add(rdbtnMelodicTrainer);
 
-		JRadioButton rdbtnRhytmicTrainer = new JRadioButton("Rhytmic Trainer");
+		JRadioButton rdbtnRhytmicTrainer = new JRadioButton("Rhythm Trainer");
 		rdbtnRhytmicTrainer.setBounds(124, 180, 141, 23);
 		frame.getContentPane().add(rdbtnRhytmicTrainer);
 
@@ -119,9 +119,9 @@ public class testt_GUII extends JFrame {
 		btnLogIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//JOptionPane.showMessageDialog(null, "Please select one of the trainer type!");
-				if(rdbtnMelodicTrainer.isSelected()==false && rdbtnRhytmicTrainer.isSelected()==false){
+				if((rdbtnMelodicTrainer.isSelected()==false && rdbtnRhytmicTrainer.isSelected()==false) || textField.getText().length()==0){
 					JOptionPane.showMessageDialog(null, "Please select one of the trainer type!");
-				}else if(rdbtnMelodicTrainer.isSelected()==true && rdbtnRhytmicTrainer.isSelected()==false){
+				}else if((rdbtnMelodicTrainer.isSelected()==true && rdbtnRhytmicTrainer.isSelected()==false) || textField.getText().length()==0){
 					frame.setVisible(false);
 					try {
 						readMelodic();
@@ -134,7 +134,7 @@ public class testt_GUII extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-				}else if(rdbtnMelodicTrainer.isSelected()==false && rdbtnRhytmicTrainer.isSelected()==true){
+				}else if((rdbtnMelodicTrainer.isSelected()==false && rdbtnRhytmicTrainer.isSelected()==true) || textField.getText().length()==0){
 					frame.setVisible(false);
 					try {
 						readRhytmic();
@@ -147,14 +147,6 @@ public class testt_GUII extends JFrame {
 						e1.printStackTrace();
 					}
 				}
-
-				if(textField.getText().compareTo("taylan")==0){
-					frame.setVisible(false);
-					//mainWindow2();
-
-
-
-				}
 			}
 		});
 		btnLogIn.setBounds(134, 215, 117, 29);
@@ -162,11 +154,11 @@ public class testt_GUII extends JFrame {
 	}
 
 	private void mainWindow1() throws InvalidMidiDataException, IOException {
-		
-		this.setTitle("Singing Trainer");
+
+		this.setTitle("Melody Trainer");
 
 		frame = new JFrame();
-		frame.setBounds(100, 100, 750, 500);
+		frame.setBounds(300, 220, 750, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
@@ -232,6 +224,8 @@ public class testt_GUII extends JFrame {
 				btnStartRec.setEnabled(false);
 				btnRecord.setEnabled(true);
 				mel.captureAudio();
+
+				plot.clear();
 			}
 		});
 
@@ -267,6 +261,8 @@ public class testt_GUII extends JFrame {
 						mel.getExGen().setExNum(exNum+1);
 						mel.getExGen().createEx();
 						label.setText(""+(exNum+1));
+						mel.setNextFlag(false);
+						next.setEnabled(mel.isNextFlag());
 						plot.clear();
 					}//end actionPerformed
 				}//end ActionListener
@@ -282,29 +278,13 @@ public class testt_GUII extends JFrame {
 						mel.analyze();
 						next.setEnabled(mel.isNextFlag());
 						Thread t = new Thread(new Runnable() {
-						    @Override
-						    public void run() {
-						    	//Plot2 plot2 = new Plot2("Results", 1024, 512);
-								/*plot2.plot(mel.getRef(), (float) 0.5, 0, false, Color.RED);
-								plot2.plot(mel.getRec(), (float) 0.5, 0, true, Color.BLUE); */	
-								//Plot plot3 = new Plot(mel.getRef(),mel.getRec(),"Results");
+							@Override
+							public void run() {
 								plot.plot(mel.getRef(),(float) 0.1, 0, false, Color.red);
 								plot.plot(mel.getNewExp(), (float) 0.1, 0, true, Color.blue);
-								System.out.println(mel.getRef().length);
-								System.out.println(mel.getNewExp().length);
-								System.out.println(mel.getRec().length);
-								
-								for(int i=0;i<mel.getRef().length;i++){
-									System.out.println(mel.getRef()[i]);
-								}
-								System.out.println("hop");
-								for(int i=0;i<mel.getNewExp().length;i++){
-									System.out.println(mel.getNewExp()[i]);
-								}
-								//plot.repaint();
-						    }
-						    
-						   });
+							}
+
+						});
 						t.start();
 					}//end actionPerformed
 				}//end ActionListener
@@ -319,9 +299,25 @@ public class testt_GUII extends JFrame {
 		lblUsername.setBounds(6, 427, 70, 16);
 		frame.getContentPane().add(lblUsername);
 
-		JButton btnSave = new JButton("12");
+		JButton btnSave = new JButton("Save");
 		btnSave.setBounds(0, 449, 56, 29);
 		frame.getContentPane().add(btnSave);
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					saveTheMelodic();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 
 		JLabel lblLevel_1 = new JLabel("Level :");
 		lblLevel_1.setBounds(406, 34, 61, 16);
@@ -337,6 +333,7 @@ public class testt_GUII extends JFrame {
 
 
 		label.setBounds(471, 62, 44, 16);
+		frame.getContentPane().add(label);
 
 		plot = new Plot3("f", 200, 100);
 		plot.setBounds(0, 120, 700, 280);
@@ -344,15 +341,22 @@ public class testt_GUII extends JFrame {
 		JLabel lblAsd = new JLabel(textField.getText());
 		lblAsd.setBounds(88, 427, 61, 16);
 		frame.getContentPane().add(lblAsd);
-		
 
+		JButton btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		btnExit.setBounds(69, 449, 68, 29);
+		frame.getContentPane().add(btnExit);
 	}
 
 	private void mainWindow2() throws InvalidMidiDataException, IOException {
-		this.setTitle("Rhytmic Trainer");
+		this.setTitle("Rhythm Trainer");
 
 		frame = new JFrame();
-		frame.setBounds(100, 100, 750, 500);
+		frame.setBounds(300, 220, 750, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setVisible(true);
@@ -423,6 +427,7 @@ public class testt_GUII extends JFrame {
 				btnStartRec.setEnabled(false);
 				btnRecord.setEnabled(true);
 				rit.captureAudio();
+				plot.clear();
 			}
 		});
 
@@ -430,6 +435,10 @@ public class testt_GUII extends JFrame {
 		prev.setBounds(406, 90, 117, 29);
 		prev.setEnabled(true);
 		frame.getContentPane().add(prev);
+
+		JLabel label = new JLabel(String.valueOf(rit.getExNo()));
+		label.setBounds(471, 62, 44, 16);
+		frame.getContentPane().add(label);
 
 		JButton next = new JButton("Next >");
 		next.setBounds(535, 90, 117, 29);
@@ -442,7 +451,7 @@ public class testt_GUII extends JFrame {
 							ActionEvent e){
 						int exNum = rit.getExNo();
 						rit.setExNo(exNum-1);
-						exer.setText(""+(exNum-1));
+						label.setText(""+(exNum-1));
 					}//end actionPerformed
 				}//end ActionListener
 				);
@@ -452,7 +461,10 @@ public class testt_GUII extends JFrame {
 							ActionEvent e){
 						int exNum = rit.getExNo();
 						rit.setExNo(exNum+1);
-						exer.setText(""+(exNum+1));
+						label.setText(""+(exNum+1));
+						rit.setNextFlag(false);
+						next.setEnabled(rit.isNextFlag());
+						plot.clear();
 					}//end actionPerformed
 				}//end ActionListener
 				);
@@ -467,15 +479,13 @@ public class testt_GUII extends JFrame {
 						rit.analyze();
 						next.setEnabled(rit.isNextFlag());
 						Thread t = new Thread(new Runnable() {
-						    @Override
-						    public void run() {
-						    	Plot2 plot2 = new Plot2("Results", 1024, 512);
-								plot2.plotInt3(rit.getAl1(),(float) 1, 0, false, Color.RED);
-								plot2.plotInt3(rit.getAl2(),(float) 1, 1, true, Color.BLUE);
-								
-						    }
-						    
-						   });
+							@Override
+							public void run() {
+								plot.plotInt3(rit.getAl1(),(float) 1, 0, false, Color.red);
+								plot.plotInt3(rit.getAl2(), (float) 1, 1, true, Color.blue);
+							}
+
+						});
 						t.start();
 					}//end actionPerformed
 				}//end ActionListener
@@ -493,6 +503,25 @@ public class testt_GUII extends JFrame {
 		JButton btnSave = new JButton("Save");
 		btnSave.setBounds(0, 449, 56, 29);
 		frame.getContentPane().add(btnSave);
+		btnSave.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					saveTheRhytmic();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
 
 		JLabel lblLevel_1 = new JLabel("Level :");
 		lblLevel_1.setBounds(406, 34, 61, 16);
@@ -506,118 +535,34 @@ public class testt_GUII extends JFrame {
 		lblA.setBounds(471, 34, 44, 16);
 		frame.getContentPane().add(lblA);
 
-		JLabel label = new JLabel(String.valueOf(rit.getExNo()));
 		label.setBounds(471, 62, 44, 16);
 		frame.getContentPane().add(label);
 
 
-
+		plot = new Plot3("f", 200, 100);
+		plot.setBounds(0, 120, 700, 280);
+		frame.getContentPane().add(plot);
 		JLabel lblAsd = new JLabel(textField.getText());
 		lblAsd.setBounds(88, 427, 61, 16);
 		frame.getContentPane().add(lblAsd);
 
-
-
-
-
-	}
-
-	public static void test() {
-		JSONArray arr = new JSONArray();
-		
-		JSONObject obj = new JSONObject();
-		obj.put("name", textField.getText());
-
-		JSONArray melo = new JSONArray();
-		melo.add("1");
-		melo.add("1");
-
-		JSONArray ritm = new JSONArray();
-		ritm.add("1");
-		ritm.add("2");
-
-		obj.put("rithymic", ritm);
-		obj.put("melodic", melo);
-		
-		arr.add(obj);
-		try {
-
-			FileWriter file = new FileWriter("test.json");
-			file.write(obj.toJSONString());
-			file.flush();
-			file.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-	/*public static void saveMelodic() {
-		JSONParser parser = new JSONParser();
-		boolean oldu = false;
-		try {  
-
-			Object obj = parser.parse(new FileReader("test.json"));  
-			JSONArray jsonArray = (JSONArray) obj;
-			int length = jsonArray.size();
-			for (int i =0; i< length; i++) {
-				JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-				if(textField.getText().compareTo(jsonObject.get("name").toString())==0){
-					oldu = true;
-					JSONArray melArray = (JSONArray) jsonObject.get("melodic");
-					//melArray.set(0, );
-					//melArray.set(1, );
-					
-				}
+		JButton btnExit_1 = new JButton("Exit");
+		btnExit_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
 			}
-			
-			if(oldu==false){
-				JSONArray arr = new JSONArray();
-				JSONObject jsonObject = new JSONObject();
-				
-				JSONObject new = new JSONObject();
-				obj.put("name", "kaka");
-				JSONArray melo = new JSONArray();
-				melo.add("1");
-				melo.add("1");
-				JSONArray ritm = new JSONArray();
-				ritm.add("1");
-				ritm.add("2");
-				obj.put("rithymic", ritm);
-				obj.put("melodic", melo);
-				
-				arr.add(new);
-				System.out.println("eee");
-				
-				try {
-
-					FileWriter file = new FileWriter("test.json");
-					file.write(arr.toJSONString());
-					file.flush();
-					file.close();
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			
-		} catch (FileNotFoundException e) {  
-			e.printStackTrace();  
-		} catch (IOException e) {  
-			e.printStackTrace();  
-		} catch (ParseException e) {  
-			e.printStackTrace();  
-		}  
-
+		});
+		btnExit_1.setBounds(56, 449, 56, 29);
+		frame.getContentPane().add(btnExit_1);
 	}
-	*/
+
 	public void readMelodic() throws NumberFormatException, InvalidMidiDataException {
 		JSONParser parser = new JSONParser(); 
 		boolean oldu = false;
 		try {  
 
 			Object obj = parser.parse(new FileReader("test.json")); 
-			
+
 			JSONArray jsonArray = (JSONArray) obj;
 			int length = jsonArray.size();
 			for (int i =0; i< length; i++) {
@@ -625,14 +570,12 @@ public class testt_GUII extends JFrame {
 				if(textField.getText().compareTo(jsonObject.get("name").toString())==0){
 					oldu = true;
 					JSONArray melArray = (JSONArray) jsonObject.get("melodic");
-					
+					JOptionPane.showMessageDialog(null, "You can continue with saved exercise.");
 					this.mel = new MelodicMain(Integer.parseInt(melArray.get(0).toString()),Integer.parseInt(melArray.get(1).toString()));
-					
-		
 				}
 			}
-
 			if(oldu==false) {
+				JOptionPane.showMessageDialog(null, "New Account is created with username:"+textField.getText());
 				this.mel = new MelodicMain(1,1);
 			}
 
@@ -659,14 +602,13 @@ public class testt_GUII extends JFrame {
 				if(textField.getText().compareTo(jsonObject.get("name").toString())==0){
 					oldu = true;
 					JSONArray melArray = (JSONArray) jsonObject.get("rhytmic");
-					
+					JOptionPane.showMessageDialog(null, "You can continue with saved exercise.");
 					this.rit = new RhythmicMain(Integer.parseInt(melArray.get(1).toString()));
-					
-				
 				}
 			}
 
 			if(oldu==false) {
+				JOptionPane.showMessageDialog(null, "New Account is created with username:"+textField.getText());
 				this.rit = new RhythmicMain(1);
 			}
 
@@ -681,12 +623,185 @@ public class testt_GUII extends JFrame {
 		//
 	}
 
+	public void saveTheMelodic() throws FileNotFoundException, IOException, ParseException {
+		JSONParser parser = new JSONParser();
 
+		boolean found = false;
+
+		Object obj = parser.parse(new FileReader("test.json"));  
+		JSONArray jsonArray = (JSONArray) obj;
+		JSONArray arr = new JSONArray();
+
+		for (int i=0; i<jsonArray.size(); i++)
+		{
+			JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+
+			if(textField.getText().compareTo(jsonObject.get("name").toString())!=0)
+			{
+				JSONObject mainObject = new JSONObject();
+				JSONArray melArray=(JSONArray) jsonObject.get("melodic");
+				JSONArray ritArray=(JSONArray) jsonObject.get("rhytmic");
+
+				mainObject.put("name", jsonObject.get("name").toString());
+
+				JSONArray melo = new JSONArray();
+				melo.add(String.valueOf(melArray.get(0)));
+				melo.add(String.valueOf(melArray.get(1)));
+
+
+				JSONArray ritm = new JSONArray();
+				ritm.add(String.valueOf(ritArray.get(0)));
+				ritm.add(String.valueOf(ritArray.get(1)));
+
+				mainObject.put("melodic", melo);
+				mainObject.put("rhytmic", ritm);
+
+				arr.add(mainObject);
+
+			}
+			else if(textField.getText().compareTo(jsonObject.get("name").toString())==0) {
+				found = true;
+				JSONObject mainObject = new JSONObject();
+				JSONArray ritArray=(JSONArray) jsonObject.get("rhytmic");
+
+				mainObject.put("name", textField.getText());
+
+				JSONArray melo = new JSONArray();
+				melo.add(String.valueOf(mel.getLevel()));
+				melo.add(String.valueOf(mel.getExGen().getExNum()));
+
+				JSONArray ritm = new JSONArray();
+				ritm.add(String.valueOf(ritArray.get(0)));
+				ritm.add(String.valueOf(ritArray.get(1)));
+
+				mainObject.put("rhytmic", ritm);
+				mainObject.put("melodic", melo);
+
+				arr.add(mainObject);
+			}
+
+
+
+		}
+		if(found==false) {
+			JSONObject mainObject = new JSONObject();
+
+			mainObject.put("name", textField.getText());
+
+			JSONArray melo = new JSONArray();
+			melo.add(String.valueOf(mel.getLevel()));
+			melo.add(String.valueOf(mel.getExNo()));
+
+
+			JSONArray ritm = new JSONArray();
+			ritm.add("1");
+			ritm.add("1");
+
+			mainObject.put("rhytmic", ritm);
+			mainObject.put("melodic", melo);
+
+			arr.add(mainObject);
+		}
+		System.out.println("Saved file is updated.");
+		try {
+			FileWriter file = new FileWriter("test.json");
+			file.write(arr.toJSONString());
+			file.flush();
+			file.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("ex no:"+mel.getExNo()+"----");
+		System.out.println("level no:"+mel.getLevel());
+	}
+
+	public void saveTheRhytmic() throws FileNotFoundException, IOException, ParseException {
+		JSONParser parser = new JSONParser();
+
+		boolean found = false;
+
+
+		Object obj = parser.parse(new FileReader("test.json"));  
+		JSONArray jsonArray = (JSONArray) obj;
+		JSONArray arr = new JSONArray();
+
+		for (int i=0; i<jsonArray.size(); i++)
+		{
+			JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+
+			if(textField.getText().compareTo(jsonObject.get("name").toString())!=0)
+			{
+				JSONObject mainObject = new JSONObject();
+				JSONArray melArray=(JSONArray) jsonObject.get("melodic");
+				JSONArray ritArray=(JSONArray) jsonObject.get("rhytmic");
+
+				mainObject.put("name", jsonObject.get("name").toString());
+
+				JSONArray melo = new JSONArray();
+				melo.add(String.valueOf(melArray.get(0)));
+				melo.add(String.valueOf(melArray.get(1)));
+
+				JSONArray ritm = new JSONArray();
+				ritm.add(String.valueOf(ritArray.get(0)));
+				ritm.add(String.valueOf(ritArray.get(1)));
+
+				mainObject.put("melodic", melo);
+				mainObject.put("rhytmic", ritm);
+
+				arr.add(mainObject);
+
+			}
+			else if(textField.getText().compareTo(jsonObject.get("name").toString())==0) {
+				found = true;
+				JSONObject mainObject = new JSONObject();
+				JSONArray melArray=(JSONArray) jsonObject.get("melodic");
+
+				mainObject.put("name", textField.getText());
+
+				JSONArray melo = new JSONArray();
+				melo.add(String.valueOf(melArray.get(0)));
+				melo.add(String.valueOf(melArray.get(1)));
+
+				JSONArray ritm = new JSONArray();
+				ritm.add(String.valueOf(rit.getLevel()));
+				ritm.add(String.valueOf(rit.getExNo()));
+
+				mainObject.put("rhytmic", ritm);
+				mainObject.put("melodic", melo);
+
+				arr.add(mainObject);
+			}
+		}
+		if(found==false) {
+			JSONObject mainObject = new JSONObject();
+			mainObject.put("name", textField.getText());
+
+			JSONArray melo = new JSONArray();
+			melo.add("1");
+			melo.add("1");
+
+			JSONArray ritm = new JSONArray();
+			ritm.add(String.valueOf(rit.getLevel()));
+			ritm.add(String.valueOf(rit.getExNo()));
+
+			mainObject.put("rhytmic", ritm);
+			mainObject.put("melodic", melo);
+
+			arr.add(mainObject);
+		}
+		System.out.println("Saved file is updated.");
+		try {
+			System.out.println("son hali:"+arr);
+			FileWriter file = new FileWriter("test.json");
+			file.write(arr.toJSONString());
+			file.flush();
+			file.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 
 }
-
-
-
-
-

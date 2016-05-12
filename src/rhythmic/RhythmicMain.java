@@ -13,6 +13,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
+import javax.swing.JOptionPane;
 
 
 
@@ -131,6 +132,9 @@ public class RhythmicMain {
 	public void analyze(){
 		RhythmicHelper rh1 = new RhythmicHelper(this.exName);
 		RhythmicHelper rh2 = new RhythmicHelper("recRhy");
+		
+		this.al1 = new ArrayList<Integer>();
+		this.al2 = new ArrayList<Integer>();
 
 		double totalM1 = rh1.getTotalMeas();
 		double totalM2 = rh2.getTotalMeas();
@@ -173,41 +177,49 @@ public class RhythmicMain {
 		}
 
 		calculateDist();
-		if(dist<5){
+		if(dist<4500){
+			JOptionPane.showMessageDialog(null, "Congrats! Do the next one!");
 			nextFlag=true;
+		}else{			
+			JOptionPane.showMessageDialog(null, "You have failed this exercise, try again!");
+			nextFlag=false;
 		}
 	}
 
 	public void calculateDist(){
 		dist=0;
+		int temp=0;
 		int found=0;
 		for(int i=0;i<al1.size();i++){
 			if(al1.get(i)==1){
-				for(int j=0;j<5;j++){
+				for(int j=0;j<7;j++){
 					if((i-j)>=0){
 						if(al1.get(i)!=al2.get(i-j)){
-							dist++;
+							temp++;
 						}else{
 							found=1;
 						}
 					}					
 				}
 				if(found==1){
-					dist=0;
+					temp=0;
 				}else{
-					for(int j=0;j<5;j++){
+					for(int j=0;j<7;j++){
 						if(al1.get(i)!=al2.get(i+j)){
-							dist++;
+							temp++;
 						}else{
 							found=1;
 						}
 					}
 				}
 				if(found==1){
-					dist=0;
+					temp=0;
 				}
 			}
+			found=0;
+			dist=dist+temp;
 		}
+		System.out.println(dist);
 	}
 
 	public ArrayList<Integer> getAl1() {
@@ -247,6 +259,10 @@ public class RhythmicMain {
 
 	public double getDist() {
 		return dist;
+	}
+
+	public void setNextFlag(boolean nextFlag) {
+		this.nextFlag = nextFlag;
 	}
 
 

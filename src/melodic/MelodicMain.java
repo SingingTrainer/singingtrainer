@@ -2,6 +2,10 @@ package melodic;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.sampled.AudioFileFormat;
@@ -30,6 +34,7 @@ public class MelodicMain {
 	private DTW dtw;
 	private double dist;
 	public boolean nextFlag;
+	private float[] ex;
 
 	
 	public MelodicMain(int level, int exNo) throws InvalidMidiDataException, IOException{
@@ -109,18 +114,21 @@ public class MelodicMain {
 	public void analyze(){
 		readWaveFile();
 		this.ref = exGen.getRefArr();
-		estimate(this.org);
+		this.ex = exGen.getEx();
+		float max = getMax(ex);
+		float min = getMin(ex);
+		estimate(this.org, max, min);
 		rec = orgPitchResult;
-		System.out.println(ref.length+"ref");
 		dtw = new DTW(ref,rec);
-		dist = dtw.getDistance();
+		dist = dtw.getDistance()/rec.length;
+		System.out.println("dist: "+dist);
 		checkResult();
 		resample(ref,rec);
 	}
 	
 	public void checkResult(){
 		
-		if(dist>18000){
+		if(dist>250){
 			JOptionPane.showMessageDialog(null, "You have failed this exercise, try again!");
 		}else{
 			JOptionPane.showMessageDialog(null, "Congrats! Do the next one!");
@@ -186,17 +194,18 @@ public class MelodicMain {
 		this.ref[0]=0;
 	}
 	
-	public void estimate(float[] arr){
+	public void estimate(float[] arr, float max, float min){
 		float[][] chunked = AudioUtilities.chunkArray(arr,bufferSize);
 		yin = new Yin(sampleRate,bufferSize);
 		orgPitchResult = new float[chunked.length];
+		
 		for (int i=0; i<orgPitchResult.length;++i){
 			float r = yin.getPitch(chunked[i]).getPitch();
 
-			while((r<200 || r>560) && r!=-1){
-				if(r<200)
+			while(((r<(min/(Math.sqrt(2))) || r>(max*(Math.sqrt(2))))) && r!=-1){
+				if(r<(min/(Math.sqrt(2))))
 					r=r*2;
-				if(r>560)
+				if(r>(max*(Math.sqrt(2))))
 					r=r/2;
 			}
 
@@ -207,6 +216,32 @@ public class MelodicMain {
 				orgPitchResult[i] = r;
 			}
 		}
+	}
+	
+	public float getMax(float[] ex){
+		float max;
+		ArrayList<Float> list = new ArrayList<Float>();
+
+		for(int i=0; i<ex.length;i++){
+			list.add(ex[i]);
+		}
+	    
+		max = Collections.max(list);
+		
+		return max;
+	}
+	
+	public float getMin(float[] ex){
+		float min;
+		ArrayList<Float> list = new ArrayList<Float>();
+
+		for(int i=0; i<ex.length;i++){
+			list.add(ex[i]);
+		}
+	    
+		min = Collections.min(list);
+		
+		return min;
 	}
 
 	public float[] getRef() {
@@ -251,6 +286,10 @@ public class MelodicMain {
 
 	public float[] getNewExp() {
 		return newExp;
+	}
+
+	public void setNextFlag(boolean nextFlag) {
+		this.nextFlag = nextFlag;
 	}
 	
 
