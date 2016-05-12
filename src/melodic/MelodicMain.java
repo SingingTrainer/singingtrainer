@@ -121,7 +121,6 @@ public class MelodicMain {
 		rec = orgPitchResult;
 		dtw = new DTW(ref,rec);
 		dist = dtw.getDistance()/rec.length;
-		System.out.println("dist: "+dist);
 		checkResult();
 		resample(ref,rec);
 	}
