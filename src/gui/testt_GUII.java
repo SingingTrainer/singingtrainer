@@ -48,6 +48,7 @@ public class testt_GUII extends JFrame {
 	private JButton but2 = new JButton("Start Rec");
 	private JButton but3 = new JButton("Finish Rec");
 	private JButton but4 = new JButton("Analyze");
+	private Plot3 plot;
 	private static JTextField textField;
 
 	JSONParser parser; 
@@ -241,7 +242,7 @@ public class testt_GUII extends JFrame {
 
 		JButton next = new JButton("Next >");
 		next.setBounds(535, 90, 117, 29);
-		next.setEnabled(mel.nextFlag);
+		next.setEnabled(mel.isNextFlag());
 		frame.getContentPane().add(next);
 
 		JLabel label = new JLabel(String.valueOf(mel.getExNo()));
@@ -266,6 +267,7 @@ public class testt_GUII extends JFrame {
 						mel.getExGen().setExNum(exNum+1);
 						mel.getExGen().createEx();
 						label.setText(""+(exNum+1));
+						plot.clear();
 					}//end actionPerformed
 				}//end ActionListener
 				);
@@ -282,10 +284,24 @@ public class testt_GUII extends JFrame {
 						Thread t = new Thread(new Runnable() {
 						    @Override
 						    public void run() {
-						    	/*Plot2 plot2 = new Plot2("Results", 1024, 512);
-								plot2.plot(mel.getRef(), (float) 0.5, 0, false, Color.RED);
+						    	//Plot2 plot2 = new Plot2("Results", 1024, 512);
+								/*plot2.plot(mel.getRef(), (float) 0.5, 0, false, Color.RED);
 								plot2.plot(mel.getRec(), (float) 0.5, 0, true, Color.BLUE); */	
-								Plot plot3 = new Plot(mel.getRef(),mel.getRec(),"Results");
+								//Plot plot3 = new Plot(mel.getRef(),mel.getRec(),"Results");
+								plot.plot(mel.getRef(),(float) 0.1, 0, false, Color.red);
+								plot.plot(mel.getNewExp(), (float) 0.1, 0, true, Color.blue);
+								System.out.println(mel.getRef().length);
+								System.out.println(mel.getNewExp().length);
+								System.out.println(mel.getRec().length);
+								
+								for(int i=0;i<mel.getRef().length;i++){
+									System.out.println(mel.getRef()[i]);
+								}
+								System.out.println("hop");
+								for(int i=0;i<mel.getNewExp().length;i++){
+									System.out.println(mel.getNewExp()[i]);
+								}
+								//plot.repaint();
 						    }
 						    
 						   });
@@ -303,7 +319,7 @@ public class testt_GUII extends JFrame {
 		lblUsername.setBounds(6, 427, 70, 16);
 		frame.getContentPane().add(lblUsername);
 
-		JButton btnSave = new JButton("Save");
+		JButton btnSave = new JButton("12");
 		btnSave.setBounds(0, 449, 56, 29);
 		frame.getContentPane().add(btnSave);
 
@@ -322,11 +338,13 @@ public class testt_GUII extends JFrame {
 
 		label.setBounds(471, 62, 44, 16);
 
-		frame.getContentPane().add(label);
-
+		plot = new Plot3("f", 200, 100);
+		plot.setBounds(0, 120, 700, 280);
+		frame.getContentPane().add(plot);
 		JLabel lblAsd = new JLabel(textField.getText());
 		lblAsd.setBounds(88, 427, 61, 16);
 		frame.getContentPane().add(lblAsd);
+		
 
 	}
 

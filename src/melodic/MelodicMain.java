@@ -23,7 +23,7 @@ public class MelodicMain {
 	private AudioFormat audioFormat;
 	private TargetDataLine targetDataLine;
 	private Yin yin;
-	private float[] ref, rec, orgPitchResult, org;
+	private float[] ref, rec, orgPitchResult, org, newExp;
 	private float sampleRate;
 	private int bufferSize;
 	private ExerciseGen exGen;
@@ -31,6 +31,7 @@ public class MelodicMain {
 	private double dist;
 	public boolean nextFlag;
 
+	
 	public MelodicMain(int level, int exNo) throws InvalidMidiDataException, IOException{
 		this.level=level;
 		this.exNo=exNo;
@@ -114,10 +115,11 @@ public class MelodicMain {
 		dtw = new DTW(ref,rec);
 		dist = dtw.getDistance();
 		checkResult();
+		resample(ref,rec);
 	}
 	
 	public void checkResult(){
-		System.out.println(dist);
+		
 		if(dist>18000){
 			JOptionPane.showMessageDialog(null, "You have failed this exercise, try again!");
 		}else{
@@ -135,6 +137,55 @@ public class MelodicMain {
 		this.bufferSize = 2048;
 	}
 	
+	public void resample(float ref[], float[] rec){
+		if(ref.length>rec.length){
+			newExp = new float[ref.length];
+			double div = ref.length/rec.length;
+			int round = (int) Math.floor(div);
+			int count=0;
+			int level=0;
+			int dif = ref.length-round*rec.length;
+
+			for(int i=0;i<rec.length;i++){
+				if(level<dif){
+					round=(int) Math.floor(div)+1;
+				}
+				else{
+					round=(int) Math.floor(div);
+				}
+
+				for(int j=0; j<round;j++){
+					newExp[count]=rec[i];
+					//System.out.println("NewExp");
+					count++;
+
+				}
+				level++;
+
+			}			
+		}
+		else{
+			double div = rec.length/ref.length;
+			int round = (int) Math.round(div);
+			int count=0;
+			int level=0;
+			newExp = new float[ref.length];
+
+			for(int i=0; i<rec.length;i++){
+
+				if((i-level*(round-1))<newExp.length){
+					if((count%round)==0){
+						newExp[i-level*(round-1)]=rec[i];
+						level++;
+					}
+				}
+
+				count++;
+			}
+		}
+		this.ref[0]=0;
+	}
+	
 	public void estimate(float[] arr){
 		float[][] chunked = AudioUtilities.chunkArray(arr,bufferSize);
 		yin = new Yin(sampleRate,bufferSize);
@@ -142,10 +193,10 @@ public class MelodicMain {
 		for (int i=0; i<orgPitchResult.length;++i){
 			float r = yin.getPitch(chunked[i]).getPitch();
 
-			while((r<250 || r>515) && r!=-1){
-				if(r<250)
+			while((r<200 || r>560) && r!=-1){
+				if(r<200)
 					r=r*2;
-				if(r>515)
+				if(r>560)
 					r=r/2;
 			}
 
@@ -196,6 +247,10 @@ public class MelodicMain {
 
 	public void setExNo(int exNo) {
 		this.exNo = exNo;
+	}
+
+	public float[] getNewExp() {
+		return newExp;
 	}
 	
 
